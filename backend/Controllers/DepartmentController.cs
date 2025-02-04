@@ -39,5 +39,53 @@ namespace backend.Controllers
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetDepartments), new { id = department.DepartmentId }, department);
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateDepartment(int id , Department department)
+        {
+            if (id != department.DepartmentId)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(department).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!DepartmentExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return NoContent();
+        }
+
+        [HttpDelete("{id")]
+        public async Task<IActionResult> DeleteDepartment(int id)
+        {
+            var department = await _context.Departments.FindAsync(id);
+            if (department == null)
+            {
+                return NotFound();
+            }
+
+            _context.Departments.Remove(department);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool DepartmentExists(int id)
+        {
+            return _context.Departments.Any(e => e.DepartmentId == id);
+        }
     }
 }
