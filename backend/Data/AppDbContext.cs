@@ -15,7 +15,8 @@ namespace backend.Data
             modelBuilder.Entity<Employment>()
                 .HasOne(e => e.Department)
                 .WithMany()
-                .HasForeignKey(e => e.Department);
+                .HasForeignKey(e => e.DepartmentId);  // ✅ Bonne clé étrangère
         }
+
     }
 }
